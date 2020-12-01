@@ -1,0 +1,131 @@
+---
+title: "Final Fundamentos 2020"
+output: html_document
+---
+
+En las siguientes preguntas describe tus procedimientos y escribe las
+respuestas explícitamente (que no haya necesidad de correr código para 
+obtenerlas). Incluye el código.
+
+## 1. Pruebas de hipótesis
+
+De acuerdo a una encuesta en EUA, 26% de los residentes adultos de Illinois han 
+terminado la preparatoria. Un investigador sospecha que este porcentaje es
+menor en un condado particular del estado. Obtiene una muestra aleatoria de 
+dicho condado y encuentra que 69 de 310 personas en la muestra han completado
+la preparatoria. Estos resultados soportan su hipótesis? (describe tu elección de
+prueba de hipótesis, valor p y conclusión).
+
+
+## 2. Relación entre bootstrap e inferencia bayesiana
+
+Consideremos el caso en que tenemos una única observación $x$ proveniente de 
+una distribución normal
+
+$$x \sim N(\theta, 1)$$
+
+Supongamos ahora que elegimos una distribución inicial Normal, parametrizada con 
+$\tau = 1/\sigma^2$
+
+$$\theta \sim N(0, \tau)$$ 
+
+dando lugar a la distribución posterior (como vimos en la tarea)
+
+$$\theta|x \sim N\bigg(\frac{x}{1 + 1/\tau}, \frac{1}{1+1/\tau}\bigg)$$ 
+
+Ahora, entre mayor $\tau$, más se concentra la posterior en el estimador de
+máxima verosimilitud $\hat{\theta}=x$. En el límite, cuando $\tau \to \infty$
+obtenemos una inicial no-informativa (constante) y la distribución posterior
+
+$$\theta|x \sim N(x,1)$$
+
+Esta posterior coincide con la distribución de bootstrap paramétrico en que generamos valores $x^*$ de $N(x,1)$, donde $x$ es el estimador de máxima
+verosimilitud.
+
+Lo anterior se cumple debido a que utilizamos un ejemplo Normal pero también 
+se cumple aproximadamente en otros casos, lo que conlleva a una correspondencia
+entre el bootstrap paramétrico y la inferencia bayesiana. En este caso, la
+distribución bootstrap representa (aproximadamente) una distribución posterior 
+no-informartiva del parámetro de interés. Mediante la perturbación en los datos
+el bootstrap aproxima el efecto bayesiano de perturbar los parámetros con la
+ventaja de ser más simple de implementar (en muchos casos).  
+*Los detalles se pueden leer en _The Elements of Statistical Learning_ de 
+Hastie y Tibshirani.
+
+Comparemos los métodos en otro problema con el fin de apreciar la similitud en 
+los procedimientos: 
+
+Supongamos $x_1,...,x_n \sim N(0, \sigma^2)$, es decir, los datos provienen de 
+una distribución con media cero y varianza desconocida.
+
+En los puntos 2.1 y 2.2 buscamos hacer inferencia del parámetro $\sigma^2$.
+
+2.1 Bootstrap paramétrico.
+
+* Escribe la función de log-verosimilitud y calcula el estimador de máxima 
+verosimilitud para $\sigma^2$.  Supongamos que observamos los datos 
+`x` (en la carpeta datos), ¿Cuál es tu estimación de la varianza?
+
+* Aproxima el error estándar de la estimación usando __bootstrap paramétrico__ y 
+realiza un histograma de las replicaciones bootstrap.
+
+2.2 Análisis bayesiano
+
+* Continuamos con el problema de hacer inferencia de $\sigma^2$. Comienza 
+especificando una inicial Gamma Inversa, justifica tu elección de los parámetros 
+de la distribución inicial y grafica la función de densidad.
+
+* Calcula analíticamente la distribución posterior.
+
+* Realiza un histograma de simulaciones de la distribución posterior y calcula
+el error estándar de la distribución.
+
+* ¿Cómo se comparan tus resultados con los de bootstrap paramétrico?
+
+2.3 Supongamos que ahora buscamos hacer inferencia del parámetro 
+$\tau=log(\sigma)$, ¿cuál es el estimador de máxima verosimilitud?
+
+* Utiliza bootstrap paramétrico para generar un intervalo de confianza del 95%
+para el parámetro $\tau$ y realiza un histograma de las replicaciones 
+bootstrap.
+
+* Ahora volvamos a inferencia bayesiana, calcula  un intervalo de confianza para $\tau$ y un histograma de la distribución posterior de $\tau$.
+
+### 3. Bayesiana y regularización
+
+Lee el ejempo *2.7 Informative prior distribution for cancer rates* del libro
+[Bayesian Data Analysis](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf) (página 46).
+
+En el siguiente ejercicio harás algo similar al ejemplo anterior, en este caso 
+con el modelo Beta-Binomial.
+
+Los datos *pew_research_center_june_elect_wknd_data.dta* tienen información de 
+ecnuestas realizadas durante la campaña presidencial 2008 de EUA.
+
+```{r}
+poll_data <- foreign::read.dta("data/pew_research_center_june_elect_wknd_data.dta")
+```
+
+* Estima el porcentaje de la población de cada estado (excluyendo Alaska, Hawai, 
+y DC)  que se considera *very liberal*, utilizando el estimador de máxima 
+verosimilitud.
+  - Grafica en el eje *x* el número de encuestas para cada estado y en el eje *y* 
+  la estimación de máxima verosimilitud. ¿Qué observas?  
+  - Grafica en el eje *x* el porcentaje de votos que obtuvo Obama en la elección
+  para cada estado y en el eje *y* la estimación de máxima verosimilitud. ¿Qué observas? (usa los datos *2008ElectionResult.csv*)
+
+* Estima el mismo porcentaje usando inferencia bayesiana, en particular
+la familia conjugada binomial-beta. Deberás estimar la proporción de manera 
+independiente para cada estado, sin embargo, utilizarás la misma inicial a lo
+largo de todos.
+  - Para elegir los parámetros $\alpha$, $\beta$ de la incial considera la media
+  y varianza de la distribución predictiva posterior (que en este caso tiene
+  ditsribución [Beta-Binomial](https://en.wikipedia.org/wiki/Beta-binomial_distribution))
+  y empata la media y varianza observadas a sus valores observados para después
+  depejar $\alpha$ y $\beta$ (puedes usar [Wolfram alpha](https://www.wolframalpha.com/) para resolver).  
+  - Utiliza la media posterior de cada estado como estimador puntual y repite las
+  gráficas del inciso anterior.
+
+**Nota:** Este proceso para obtener los parámetros de la incial es razonable para
+este ejercicio, sin embargo, un modelo jerárquico sería la manera de formalizar 
+este acercamiento y se estudiará en próximas materias.
