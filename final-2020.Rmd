@@ -3,9 +3,21 @@ title: "Final Fundamentos 2020"
 output: html_document
 ---
 
-En las siguientes preguntas describe tus procedimientos y escribe las
+Un reporte con las respuestas se deberá enviar por correo electrónico a más 
+tardar el lunes 7 a las 15:00 horas.
+
+Instrucciones: 
+
+- En las siguientes preguntas describe tus procedimientos y escribe las
 respuestas explícitamente (que no haya necesidad de correr código para 
-obtenerlas). Incluye el código.
+obtenerlas). 
+
+- Incluye el código.
+
+- No está permitido discutir el exámen fuera de su equipo.
+
+- Para dudas (que no deben incluir info. de la respuesta) se preguntará en el 
+canal de slack #examen-final.
 
 ## 1. Pruebas de hipótesis
 
