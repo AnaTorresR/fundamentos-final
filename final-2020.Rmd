@@ -36,8 +36,7 @@ una distribución normal
 
 $$x \sim N(\theta, 1)$$
 
-Supongamos ahora que elegimos una distribución inicial Normal, parametrizada con 
-$\tau = 1/\sigma^2$
+Supongamos ahora que elegimos una distribución inicial Normal.
 
 $$\theta \sim N(0, \tau)$$ 
 
